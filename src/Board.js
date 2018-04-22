@@ -1,4 +1,6 @@
 const Piece = require('./Piece');
+const Position = require('./Position');
+const arroudPos = [new Position(0, -1), new Position(0, 1), new Position(-1, 0), new Position(1, 0)]
 
 module.exports = class Board {
   constructor(hight, wide){
@@ -13,13 +15,29 @@ module.exports = class Board {
       this.cells[0][y] = new Piece("bad", 1)
       this.cells[this.hight-1][y] = new Piece("bad", 0)
     }
+    this.print()
   }
 
-  
   print (){
     console.log(this.cells);
+    console.log("")
   }
 
+  getCanMoveVec(id, piecePos){
+    return arroudPos.filter(pos => this.canMove(id, piecePos.plus(pos)))
+  }
+
+  getPlayerPiecePos(id){
+    var result = []
+    for(let y = 0; y < this.hight; y++) {
+      for(let x = 0; x < this.wide; x++) {
+        if (this.cells[y][x] !== null &&  this.cells[y][x].getOwner() === id){
+          result.push(new Position(y, x))
+        }
+      }
+    }
+    return result
+  }
 
   getCellValue(piecePos){
     return this.cells[piecePos.vert][piecePos.hori]

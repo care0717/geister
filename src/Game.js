@@ -1,46 +1,32 @@
 const Board = require('./Board');
-const Player = require('./Player');
-const Position = require('./Position');
+
+
+const HEIGT = 5
+const WIDE = 5
 
 module.exports = class Game {
-  constructor(height, wide){
-    this.board = new Board(height, wide)
-    this.players = [new Player(0), new Player(1)]
+  constructor(player0, player1){
+    this.board = new Board(HEIGT, WIDE)
+    this.players = [player0, player1]
+    this.turn = 0
   }
 
   getBoard() {
     return this.board
   }
 
-  play(playerId, piecePos, direction){
-    const pos = new Position(piecePos.vert, piecePos.hori)
-    const nextPos = pos.plus(this.directionToVec(direction))
-    if(this.board.isMine(playerId, pos) && this.board.canMove(playerId, nextPos)){
-      if(this.board.canGet(playerId, nextPos)){
-        this.players[playerId].get(this.board.getCellValue(nextPos))
+  play(piecePos, direction){
+    const id = this.turn % this.players.length
+    const move = this.players[id].getMove(this.board)
+    if(this.board.isMine(id, move.currentPos) && this.board.canMove(id, move.nextPos)){
+      if(this.board.canGet(id, move.nextPos)){
+        this.players[id].get(this.board.getCellValue(move.nextPos))
       }
-      this.board.move(pos, nextPos)
+      this.board.move(move.currentPos, move.nextPos)
     }
+    this.turn += 1
   }
 
-  directionToVec(direction){
-    let directionVec = new Position(0, 0)
-    switch(direction){
-      case 'left':
-        directionVec.hori -= 1
-        break;
-      case 'right':
-        directionVec.hori += 1
-        break;
-      case 'down':
-        directionVec.vert += 1
-        break;
-      case 'up':
-        directionVec.vert -= 1
-        break;    
-    }
-    return directionVec
-  }
   show(){
     this.players.forEach(function(player) {
       player.print()

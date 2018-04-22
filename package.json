@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "readline-sync": "^1.4.9",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {
