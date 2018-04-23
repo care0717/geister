@@ -14,4 +14,8 @@ module.exports = class Position {
   isInVertRange(min, max) {
     return min <= this.vert && this.vert <= max;
   }
+
+  isHere(vert, hori) {
+    return this.vert === vert && this.hori === hori;
+  }
 };

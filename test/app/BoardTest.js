@@ -42,10 +42,10 @@ describe("Board", function() {
     });
   });
 
-  describe("getPlayerPiecePos", function() {
+  describe("getPlayerPiecePositions", function() {
     it("Player0のコマは(0, 1)と(0, 2)にある", function() {
       assert.equal(
-        JSON.stringify(board.getPlayerPiecePos(0)),
+        JSON.stringify(board.getPlayerPiecePositions(0).all),
         JSON.stringify([p0PiecePos, new Position(0, 2)])
       );
     });
@@ -92,6 +92,24 @@ describe("Board", function() {
       assert.equal(board.canMove(0, p1PiecePos), true);
     });
   });
+
+  describe("reverse", function() {
+    it("反転でき，戻せる", function() {
+      const beforeCells = board.copyCells();
+      board.reverse();
+      assert.equal(board.getCellValue(p0PiecePos), null);
+      assert.equal(
+        JSON.stringify(board.getCellValue(new Position(3, 3))),
+        JSON.stringify(p0Piece)
+      );
+      board.reverse();
+      assert.equal(
+        JSON.stringify(board.getCellValue(p0PiecePos)),
+        JSON.stringify(p0Piece)
+      );
+    });
+  });
+
   describe("move", function() {
     it("(0, 1)にあるコマを(0, 0)に動かせる", function() {
       board.move(p0PiecePos, nullPos);

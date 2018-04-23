@@ -18,7 +18,9 @@ module.exports = class Board {
     this.cells = tbl;
     for (let y = 1; y < this.wide - 1; y++) {
       this.cells[0][y] = new Piece("bad", 1);
+      this.cells[1][y] = new Piece("good", 1);
       this.cells[this.hight - 1][y] = new Piece("bad", 0);
+      this.cells[this.hight - 2][y] = new Piece("good", 0);
     }
     this.print();
   }
@@ -32,16 +34,21 @@ module.exports = class Board {
     return arroudPos.filter(pos => this.canMove(id, piecePos.plus(pos)));
   }
 
-  getPlayerPiecePos(id) {
-    var result = [];
+  getPlayerPiecePositions(id) {
+    var badPos = [];
+    var goodPos = [];
     for (let y = 0; y < this.hight; y++) {
       for (let x = 0; x < this.wide; x++) {
         if (this.cells[y][x] !== null && this.cells[y][x].getOwner() === id) {
-          result.push(new Position(y, x));
+          if (this.cells[y][x].getProperty() === "bad") {
+            badPos.push(new Position(y, x));
+          } else {
+            goodPos.push(new Position(y, x));
+          }
         }
       }
     }
-    return result;
+    return { all: badPos.concat(goodPos), bad: badPos, good: goodPos };
   }
 
   getCellValue(piecePos) {
@@ -58,6 +65,21 @@ module.exports = class Board {
     return piece !== null && piece.getOwner() === playerId;
   }
 
+  reverse() {
+    const beforeCells = this.copyCells();
+    for (let y = 0; y < this.hight; y++) {
+      for (let x = 0; x < this.wide; x++) {
+        if (beforeCells[this.hight - 1 - y][this.wide - 1 - x] === null) {
+          this.cells[y][x] = null;
+        } else {
+          this.cells[y][x] = Object.assign(
+            beforeCells[this.hight - 1 - y][this.wide - 1 - x]
+          );
+        }
+      }
+    }
+  }
+
   // isMineは前提としている
   // 移動先がボード内でかつ自分の駒がないことをチェック
   canMove(playerId, position) {
@@ -65,6 +87,20 @@ module.exports = class Board {
       position.isInHoriRange(0, this.wide - 1) &&
       position.isInVertRange(0, this.hight - 1);
     return isStillBoard && !this.isMine(playerId, position);
+  }
+  copyCells() {
+    var cells = new Array(this.wide);
+    for (let y = 0; y < this.hight; y++) {
+      cells[y] = new Array(this.wide).fill(null);
+    }
+    for (let y = 0; y < this.hight; y++) {
+      for (let x = 0; x < this.wide; x++) {
+        if (this.cells[y][x] !== null) {
+          cells[y][x] = Object.assign(this.cells[y][x]);
+        }
+      }
+    }
+    return cells;
   }
   // isMineとcanMoveは前提
   // 移動先に敵の駒があるかをチェック

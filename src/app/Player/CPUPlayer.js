@@ -21,6 +21,6 @@ module.exports = class HumanPlayer extends Player {
   getRandomDirectionVec(board, targetPos) {
     const directionVectors = board.getCanMoveVec(this.id, targetPos);
     const index = Math.floor(Math.random() * directionVectors.length);
-    return directionVectors[index];
+    return directionVectors[index] || new Position(0,-1);
   }
 };
