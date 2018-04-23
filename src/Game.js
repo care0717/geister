@@ -25,8 +25,8 @@ module.exports = class Game {
         this.players[id].get(this.board.getCellValue(move.nextPos));
       }
       this.board.move(move.currentPos, move.nextPos);
+      this.turn += 1;
     }
-    this.turn += 1;
   }
 
   show() {
