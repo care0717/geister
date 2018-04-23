@@ -72,7 +72,7 @@ describe("Board", function() {
     it("(0, 1)にはp0のコマが存在する", function() {
       assert.equal(board.isMine(0, p0PiecePos), true);
     });
-    it("(0, 2)にはp1のコマが存在する", function() {
+    it("(1, 1)にはp1のコマが存在する", function() {
       assert.equal(board.isMine(1, p1PiecePos), true);
     });
   });
@@ -83,12 +83,12 @@ describe("Board", function() {
     it("(0, 1)にはp0のコマは移動できない", function() {
       assert.equal(board.canMove(0, p0PiecePos), false);
     });
-    it("(0, 2)にはp0のコマは移動できる", function() {
+    it("(1, 1)にはp0のコマは移動できる", function() {
       assert.equal(board.canMove(0, p1PiecePos), true);
     });
   });
   describe("canGet", function() {
-    it("(0, 2)にあるコマをp0は取れる", function() {
+    it("(1, 1)にあるコマをp0は取れる", function() {
       assert.equal(board.canMove(0, p1PiecePos), true);
     });
   });
