@@ -1,3 +1,5 @@
+
+
 module.exports = class Player {
   constructor(id) {
     this.id = id;
@@ -21,6 +23,14 @@ module.exports = class Player {
     return goodPositions.reduce(function (previous, pos) {
       pos.isHere(0, 0) || pos.isHere(0, board.wide-1) || previous
     }, false);
+  }
+
+  //extends先で各々実装するべき
+  initBoard(board){
+    for (let y = 1; y < board.wide - 1; y++) {
+      board.cells[0][y] = new Piece("bad", this.id);
+      board.cells[1][y] = new Piece("good", this.id);
+    }
   }
 
   print() {

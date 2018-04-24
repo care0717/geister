@@ -16,13 +16,6 @@ module.exports = class Board {
       tbl[y] = new Array(wide).fill(null);
     }
     this.cells = tbl;
-    for (let y = 1; y < this.wide - 1; y++) {
-      this.cells[0][y] = new Piece("bad", 1);
-      this.cells[1][y] = new Piece("good", 1);
-      this.cells[this.hight - 1][y] = new Piece("bad", 0);
-      this.cells[this.hight - 2][y] = new Piece("good", 0);
-    }
-    this.print();
   }
 
   print() {
