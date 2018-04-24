@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node src/main.js",
     "test": "node_modules/prettier/bin-prettier.js src/**/*.js test/**/*.js --write && node_modules/mocha/bin/mocha --recursive",
     "prettier": "node_modules/prettier/bin-prettier.js src/**/*.js test/**/*.js --write"
   },

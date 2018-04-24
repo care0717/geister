@@ -11,8 +11,8 @@ module.exports = class Game {
     this.turn = 0;
     this.isFinished = false;
     this.players.forEach(function(player) {
-      player.initBoard(blankBoard);
       blankBoard.reverse();
+      player.initBoard(blankBoard);
     });
     this.board = blankBoard;
   }

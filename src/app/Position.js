@@ -1,8 +1,8 @@
 "use strict";
 module.exports = class Position {
   constructor(vert, hori) {
-    this.hori = hori;
     this.vert = vert;
+    this.hori = hori;
   }
 
   plus(pos) {
