@@ -1,3 +1,4 @@
+"use strict";
 module.exports = class Piece {
   constructor(property, owner) {
     this.property = property;

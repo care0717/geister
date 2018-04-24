@@ -1,3 +1,4 @@
+"use strict";
 const Board = require("./Board");
 
 const HEIGT = 5;
@@ -9,11 +10,11 @@ module.exports = class Game {
     this.players = [player0, player1];
     this.turn = 0;
     this.isFinished = false;
-    this.players.forEach(function(player){
-      player.initBoard(blankBoard)
-      blankBoard.reverse()
-    })
-    this.board = blankBoard
+    this.players.forEach(function(player) {
+      player.initBoard(blankBoard);
+      blankBoard.reverse();
+    });
+    this.board = blankBoard;
   }
 
   getBoard() {
@@ -21,17 +22,18 @@ module.exports = class Game {
   }
 
   play() {
-    var turnPlayerId
-    var nextPlayerId
-    this.show(this.turn)
+    var turnPlayerId;
+    var nextPlayerId;
+    this.show(this.turn);
     while (!this.isFinished) {
       turnPlayerId = this.turn % this.players.length;
-     // this.show(turnPlayerId)
+      // this.show(turnPlayerId)
       this.playerAction(turnPlayerId);
       nextPlayerId = (turnPlayerId + 1) % this.players.length;
-      this.isFinished = this.isFinishByGetPiece() || this.isFinishByMovePiece(nextPlayerId)
+      this.isFinished =
+        this.isFinishByGetPiece() || this.isFinishByMovePiece(nextPlayerId);
     }
-    this.show(nextPlayerId)
+    this.show(nextPlayerId);
   }
 
   isFinishByGetPiece() {
@@ -51,7 +53,11 @@ module.exports = class Game {
       this.board.canMove(id, move.nextPos)
     ) {
       if (this.board.canGet(id, move.nextPos)) {
-        console.log(`Player${id}は${JSON.stringify(this.board.getCellValue(move.nextPos))}を入手した`)
+        console.log(
+          `Player${id}は${JSON.stringify(
+            this.board.getCellValue(move.nextPos)
+          )}を入手した`
+        );
         this.players[id].get(this.board.getCellValue(move.nextPos));
       }
       this.board.move(move.currentPos, move.nextPos);
@@ -61,7 +67,7 @@ module.exports = class Game {
   }
 
   show(id) {
-    console.log(`Player${id}のターンです`)
+    console.log(`Player${id}のターンです`);
     this.players.forEach(function(player) {
       player.print();
     });

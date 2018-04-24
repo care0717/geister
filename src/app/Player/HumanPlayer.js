@@ -1,3 +1,4 @@
+"use strict";
 const Player = require("./Player");
 const Position = require("../Position");
 const Piece = require("../Piece");

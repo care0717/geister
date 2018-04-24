@@ -1,3 +1,4 @@
+"use strict";
 module.exports = class Position {
   constructor(vert, hori) {
     this.hori = hori;

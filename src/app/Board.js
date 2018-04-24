@@ -1,3 +1,4 @@
+"use strict";
 const Piece = require("./Piece");
 const Position = require("./Position");
 const arroudPos = [
