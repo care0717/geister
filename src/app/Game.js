@@ -43,7 +43,7 @@ module.exports = class Game {
     );
   }
   isFinishByMovePiece(nextPlayerId) {
-    this.players[nextPlayerId].isWinnerByMovePiece(this.board);
+    return this.players[nextPlayerId].isWinnerByMovePiece(this.board);
   }
 
   playerAction(id) {

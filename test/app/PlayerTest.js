@@ -1,109 +1,56 @@
-/*const Board = require("../../src/app/Board");
-const Player = require("../../src/app/Position");
+const Player = require("../../src/app/Player/Player");
+const Board = require("../../src/app/Board");
+const Position = require("../../src/app/Position");
 const Piece = require("../../src/app/Piece");
 const assert = require("assert");
+const sinon = require("sinon");
 
 const WIDE = 5;
 const HIGHT = 4;
 
-before(function() {
-  board = new Board(HIGHT, WIDE);
-  p0Piece = new Piece("bad", 0);
-  p1Piece = new Piece("good", 1);
-
-  for (let y = 0; y < board.hight; y++) {
-    for (let x = 0; x < board.wide; x++) {
-      board.cells[y][x] = null;
-    }
-  }
-  board.cells[0][1] = p0Piece;
-  board.cells[1][1] = p1Piece;
-  board.cells[0][2] = p0Piece;
-
-  nullPos = new Position(0, 0);
-  p0PiecePos = new Position(0, 1);
-  p1PiecePos = new Position(1, 1);
-});
-
-describe("Board", function() {
-  describe("constractor", function() {
-    it("wideとhightがきちんと入っている", function() {
-      assert.equal(board.wide, WIDE);
-      assert.equal(board.hight, HIGHT);
+describe("Player", function() {
+  before(function() {
+    player = new Player(0);
+    board = new Board(HIGHT, WIDE);
+    piecePos0 = new Position(0, 0);
+    piecePos1 = new Position(0, 1);
+    piecePos2 = new Position(1, 1);
+    stubPiecePosFunc = sinon.stub(board, "getPlayerPiecePositions");
+    stubPiecePosFunc.withArgs(0).returns({
+      all: [piecePos0, piecePos1, piecePos2],
+      bad: [piecePos2],
+      good: [piecePos0, piecePos1]
+    });
+    stubPiecePosFunc.withArgs(1).returns({
+      all: [piecePos0.plus(piecePos1)],
+      bad: [piecePos0.plus(piecePos1)],
+      good: []
+    });
+    p0Piece = new Piece("bad", 0);
+    p1Piece = new Piece("good", 0);
+  });
+  describe("get", function() {
+    it("goodのコマを手に入れられる", function() {
+      player.get(p1Piece);
+      assert.equal(player.gotPiece.good, 1);
     });
   });
-
-  describe("getCellValue", function() {
-    it("(0, 0)には空白が入っている", function() {
-      assert.equal(board.getCellValue(nullPos), null);
-    });
-    it("(0, 1)にはコマが入っている", function() {
-      assert.equal(board.getCellValue(p0PiecePos), p0Piece);
-    });
-  });
-
-  describe("getPlayerPiecePositions", function() {
-    it("Player0のコマは(0, 1)と(0, 2)にある", function() {
+  describe("getMyPiecePos", function() {
+    it("自分のコマの場所を手に入れられる", function() {
       assert.equal(
-        JSON.stringify(board.getPlayerPiecePositions(0).all),
-        JSON.stringify([p0PiecePos, new Position(0, 2)])
+        JSON.stringify(player.getMyPiecePos(board)),
+        JSON.stringify([piecePos0, piecePos1, piecePos2])
       );
     });
   });
-
-  describe("getCanMoveVec", function() {
-    it("Player0のコマp0Pieceは←と↓に移動できる", function() {
-      assert.equal(
-        JSON.stringify(board.getCanMoveVec(0, p0PiecePos)),
-        JSON.stringify([new Position(0, -1), new Position(1, 0)])
-      );
+  describe("isWinnerByGetPiece", function() {
+    it("相手のgoodコマがないので勝ちになる", function() {
+      assert.equal(player.isWinnerByGetPiece(board), true);
     });
   });
-
-  describe("isExist", function() {
-    it("(0, 0)にはコマが存在しない", function() {
-      assert.equal(board.isExist(nullPos), false);
-    });
-    it("(0, 1)にはコマが存在する", function() {
-      assert.equal(board.isExist(p0PiecePos), true);
-    });
-  });
-  describe("isMine", function() {
-    it("(0, 1)にはp0のコマが存在する", function() {
-      assert.equal(board.isMine(0, p0PiecePos), true);
-    });
-    it("(1, 1)にはp1のコマが存在する", function() {
-      assert.equal(board.isMine(1, p1PiecePos), true);
-    });
-  });
-  describe("canMove", function() {
-    it("(-1, 0)には移動できない", function() {
-      assert.equal(board.canMove(0, new Position(-1, 0)), false);
-    });
-    it("(0, 1)にはp0のコマは移動できない", function() {
-      assert.equal(board.canMove(0, p0PiecePos), false);
-    });
-    it("(1, 1)にはp0のコマは移動できる", function() {
-      assert.equal(board.canMove(0, p1PiecePos), true);
-    });
-  });
-  describe("canGet", function() {
-    it("(1, 1)にあるコマをp0は取れる", function() {
-      assert.equal(board.canMove(0, p1PiecePos), true);
-    });
-  });
-  describe("move", function() {
-    it("(0, 1)にあるコマを(0, 0)に動かせる", function() {
-      board.move(p0PiecePos, nullPos);
-      assert.equal(board.getCellValue(p0PiecePos), null);
-      assert.equal(board.getCellValue(nullPos), p0Piece);
-      board.move(nullPos, p0PiecePos);
-    });
-    it("(0, 1)にあるコマを(1, 1)に動かせる", function() {
-      board.move(p0PiecePos, p1PiecePos);
-      assert.equal(board.getCellValue(p0PiecePos), null);
-      assert.equal(board.getCellValue(p1PiecePos), p0Piece);
+  describe("isWinnerByMovePiece", function() {
+    it("相手のgoodコマがないので勝ちになる", function() {
+      assert.equal(player.isWinnerByMovePiece(board), true);
     });
   });
 });
-*/

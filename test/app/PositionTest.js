@@ -4,12 +4,11 @@ const assert = require("assert");
 const VERT = 1;
 const HORI = 1;
 
-before(function() {
-  pos1 = new Position(VERT, HORI);
-  pos2 = new Position(VERT, HORI + 1);
-});
-
 describe("Position", function() {
+  before(function() {
+    pos1 = new Position(VERT, HORI);
+    pos2 = new Position(VERT, HORI + 1);
+  });
   describe("constractor", function() {
     it("vertとhoriがきちんと入っている", function() {
       assert.equal(pos1.vert, VERT);

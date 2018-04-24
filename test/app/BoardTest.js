@@ -6,26 +6,25 @@ const assert = require("assert");
 const WIDE = 5;
 const HIGHT = 4;
 
-before(function() {
-  board = new Board(HIGHT, WIDE);
-  p0Piece = new Piece("bad", 0);
-  p1Piece = new Piece("good", 1);
-
-  for (let y = 0; y < board.hight; y++) {
-    for (let x = 0; x < board.wide; x++) {
-      board.cells[y][x] = null;
-    }
-  }
-  board.cells[0][1] = p0Piece;
-  board.cells[1][1] = p1Piece;
-  board.cells[0][2] = p0Piece;
-
-  nullPos = new Position(0, 0);
-  p0PiecePos = new Position(0, 1);
-  p1PiecePos = new Position(1, 1);
-});
-
 describe("Board", function() {
+  before(function() {
+    board = new Board(HIGHT, WIDE);
+    p0Piece = new Piece("bad", 0);
+    p1Piece = new Piece("good", 1);
+
+    for (let y = 0; y < board.hight; y++) {
+      for (let x = 0; x < board.wide; x++) {
+        board.cells[y][x] = null;
+      }
+    }
+    board.cells[0][1] = p0Piece;
+    board.cells[1][1] = p1Piece;
+    board.cells[0][2] = p0Piece;
+
+    nullPos = new Position(0, 0);
+    p0PiecePos = new Position(0, 1);
+    p1PiecePos = new Position(1, 1);
+  });
   describe("constractor", function() {
     it("wideとhightがきちんと入っている", function() {
       assert.equal(board.wide, WIDE);

@@ -21,7 +21,7 @@ module.exports = class Player {
   isWinnerByMovePiece(board){
     const goodPositions = board.getPlayerPiecePositions(this.id).good
     return goodPositions.reduce(function (previous, pos) {
-      pos.isHere(0, 0) || pos.isHere(0, board.wide-1) || previous
+      return pos.isHere(0, 0) || pos.isHere(0, board.wide-1) || previous
     }, false);
   }
 
