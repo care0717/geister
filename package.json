@@ -6,17 +6,24 @@
   "scripts": {
     "start": "node src/main.js",
     "test": "node_modules/prettier/bin-prettier.js src/**/*.js test/**/*.js --write && node_modules/mocha/bin/mocha --recursive",
-    "prettier": "node_modules/prettier/bin-prettier.js src/**/*.js test/**/*.js --write"
+    "prettier": "node_modules/prettier/bin-prettier.js src/**/*.js test/**/*.js --write",
+    "web": "node_modules/.bin/webpack && node src/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "readline-sync": "^1.4.9",
+    "express": "^4.16.3",
+    "jquery": "^3.3.1",
+    "skeleton": "^0.1.2",
+    "skeleton-css": "^2.0.4",
     "socket.io": "^2.1.0"
   },
   "devDependencies": {
-    "mocha": "^5.1.1",
+    "mocha": "^5.1.1",   
+     "readline-sync": "^1.4.9",
     "prettier": "^1.12.1",
-    "sinon": "^4.5.0"
+    "sinon": "^4.5.0",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15"
   }
 }

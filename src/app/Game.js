@@ -5,15 +5,10 @@ const HEIGT = 5;
 const WIDE = 5;
 
 module.exports = class Game {
-  constructor(player0, player1) {
+  constructor(player) {
     let blankBoard = new Board(HEIGT, WIDE);
-    this.players = [player0, player1];
-    this.turn = 0;
-    this.isFinished = false;
-    this.players.forEach(function(player) {
-      blankBoard.reverse();
-      player.initBoard(blankBoard);
-    });
+    this.player = player;
+    player.initBoard(blankBoard);
     this.board = blankBoard;
   }
 
@@ -22,32 +17,54 @@ module.exports = class Game {
   }
 
   play() {
-    var turnPlayerId;
-    var nextPlayerId;
-    this.show(this.turn);
-    while (!this.isFinished) {
-      turnPlayerId = this.turn % this.players.length;
-      // this.show(turnPlayerId)
-      this.playerAction(turnPlayerId);
-      nextPlayerId = (turnPlayerId + 1) % this.players.length;
-      this.isFinished =
-        this.isFinishByGetPiece() || this.isFinishByMovePiece(nextPlayerId);
-    }
-    this.show(nextPlayerId);
+    this.show();
+    this.playerAction(); 
   }
+
+  sync(game){
+    game.board.reverse()
+    this.board.cells = game.board.copyCells()
+    game.board.reverse()
+  }
+
+  initSync(game){
+    game.board.reverse()
+    const oppositeCells = game.board.copyCells()
+    for (let y = 0; y < 2; y++) {
+      for (let x = 0; x < this.board.wide; x++) {
+        if (oppositeCells[y][x] === null) {
+          this.board.cells[y][x] = null;
+        } else {
+          this.board.cells[y][x] = Object.assign(
+            oppositeCells[y][x]
+          );
+        }
+      }
+    }
+    game.board.reverse()
+  }
+
+  checkWinner(){
+    return this.isFinishByGetPiece() || this.isFinishByMovePiece()
+  }
+  
 
   isFinishByGetPiece() {
-    return (
-      this.players[0].isWinnerByGetPiece(this.board) ||
-      this.players[1].isWinnerByGetPiece(this.board)
-    );
+    const player0Win = this.board.getPlayerPiecePositions(1).bad.length === 0 || this.board.getPlayerPiecePositions(0).good.length === 0
+    const player1Win = this.board.getPlayerPiecePositions(0).bad.length === 0 || this.board.getPlayerPiecePositions(1).good.length === 0
+    return (player0Win || player1Win);
   }
-  isFinishByMovePiece(nextPlayerId) {
-    return this.players[nextPlayerId].isWinnerByMovePiece(this.board);
+  isFinishByMovePiece() {
+    const goodPositions = this.board.getPlayerPiecePositions(this.player.id).good
+    const wide = this.board.wide-1
+    return goodPositions.reduce(function (previous, pos) {
+      return pos.isHere(0, 0) || pos.isHere(0, wide) || previous
+    }, false);
   }
 
-  playerAction(id) {
-    const move = this.players[id].getMove(this.board);
+  playerAction() {
+    const id = this.player.id
+    const move = this.player.getMove(this.board);
     if (
       this.board.isMine(id, move.currentPos) &&
       this.board.canMove(id, move.nextPos)
@@ -58,19 +75,15 @@ module.exports = class Game {
             this.board.getCellValue(move.nextPos)
           )}を入手した`
         );
-        this.players[id].get(this.board.getCellValue(move.nextPos));
+        this.player.get(this.board.getCellValue(move.nextPos));
       }
       this.board.move(move.currentPos, move.nextPos);
-      this.turn += 1;
-      this.board.reverse();
     }
   }
 
-  show(id) {
-    console.log(`Player${id}のターンです`);
-    this.players.forEach(function(player) {
-      player.print();
-    });
+  show() {
+    console.log(`Player${this.player.id}のターンです`);
+    this.player.print();
     this.board.print();
   }
 };

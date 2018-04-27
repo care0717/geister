@@ -4,9 +4,9 @@ const Position = require("../Position");
 const Piece = require("../Piece");
 const readlineSync = require("readline-sync");
 
-module.exports = class HumanPlayer extends Player {
-  constructor(id) {
-    super(id);
+module.exports = class ConsolePlayer extends Player {
+  constructor(id, currentTurn) {
+    super(id, currentTurn);
   }
   initBoard(board){
     for (let y = 1; y < board.wide - 1; y++) {

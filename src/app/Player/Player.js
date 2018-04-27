@@ -1,12 +1,19 @@
 "use strict";
 
 module.exports = class Player {
-  constructor(id) {
+  constructor(id, currentTurn) {
     this.id = id;
     this.gotPiece = { bad: 0, good: 0 };
+    this.currentTurn = currentTurn
   }
   get(piece) {
     this.gotPiece[piece.getProperty()] += 1;
+  }
+  getCurrentTurn() {
+    return this.currentTurn;
+  }
+  setCurrentTurn(turn) {
+    this.currentTurn = turn;
   }
 
   getMyPiecePos(board) {
@@ -28,8 +35,8 @@ module.exports = class Player {
   //extends先で各々実装するべき
   initBoard(board){
     for (let y = 1; y < board.wide - 1; y++) {
-      board.cells[0][y] = new Piece("bad", this.id);
-      board.cells[1][y] = new Piece("good", this.id);
+      board.cells[board.hight - 2][y] = new Piece("bad", this.id);
+      board.cells[board.hight - 1][y] = new Piece("good", this.id);
     }
   }
 
