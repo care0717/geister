@@ -9,11 +9,11 @@ const arroudPos = [
 ];
 
 module.exports = class Board {
-  constructor(hight, wide) {
+  constructor(height, wide) {
     this.wide = wide;
-    this.hight = hight;
+    this.height = height;
     var tbl = new Array(wide);
-    for (let y = 0; y < hight; y++) {
+    for (let y = 0; y < height; y++) {
       tbl[y] = new Array(wide).fill(null);
     }
     this.cells = tbl;
@@ -31,7 +31,7 @@ module.exports = class Board {
   getPlayerPiecePositions(id) {
     var badPos = [];
     var goodPos = [];
-    for (let y = 0; y < this.hight; y++) {
+    for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.wide; x++) {
         if (this.cells[y][x] !== null && this.cells[y][x].getOwner() === id) {
           if (this.cells[y][x].getProperty() === "bad") {
@@ -61,17 +61,65 @@ module.exports = class Board {
 
   reverse() {
     const beforeCells = this.copyCells();
-    for (let y = 0; y < this.hight; y++) {
+    for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.wide; x++) {
-        if (beforeCells[this.hight - 1 - y][this.wide - 1 - x] === null) {
+        if (beforeCells[this.height - 1 - y][this.wide - 1 - x] === null) {
           this.cells[y][x] = null;
         } else {
           this.cells[y][x] = Object.assign(
-            beforeCells[this.hight - 1 - y][this.wide - 1 - x]
+            beforeCells[this.height - 1 - y][this.wide - 1 - x]
           );
         }
       }
     }
+  }
+
+  setCells(cells, height = this.height) {
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < this.wide; x++) {
+        if (cells[y][x] !== null) {
+          this.cells[y][x] = new Piece(cells[y][x].property, cells[y][x].owner);
+        } else {
+          this.cells[y][x] = null;
+        }
+      }
+    }
+  }
+
+  getReverseCells() {
+    const beforeCells = this.copyCells();
+    var reverseCells = new Array(this.wide);
+    for (let y = 0; y < this.height; y++) {
+      reverseCells[y] = new Array(this.wide).fill(null);
+    }
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.wide; x++) {
+        if (beforeCells[this.height - 1 - y][this.wide - 1 - x] === null) {
+          reverseCells[y][x] = null;
+        } else {
+          reverseCells[y][x] = Object.assign(
+            beforeCells[this.height - 1 - y][this.wide - 1 - x]
+          );
+        }
+      }
+    }
+    return reverseCells;
+  }
+
+  getStringCells() {
+    const beforeCells = this.copyCells();
+    var stringCells = new Array(this.wide);
+    for (let y = 0; y < this.height; y++) {
+      stringCells[y] = new Array(this.wide).fill(null);
+    }
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.wide; x++) {
+        if (beforeCells[y][x] !== null) {
+          stringCells[y][x] = beforeCells[y][x].getProperty();
+        }
+      }
+    }
+    return stringCells;
   }
 
   // isMineは前提としている
@@ -79,15 +127,15 @@ module.exports = class Board {
   canMove(playerId, position) {
     const isStillBoard =
       position.isInHoriRange(0, this.wide - 1) &&
-      position.isInVertRange(0, this.hight - 1);
+      position.isInVertRange(0, this.height - 1);
     return isStillBoard && !this.isMine(playerId, position);
   }
   copyCells() {
     var cells = new Array(this.wide);
-    for (let y = 0; y < this.hight; y++) {
+    for (let y = 0; y < this.height; y++) {
       cells[y] = new Array(this.wide).fill(null);
     }
-    for (let y = 0; y < this.hight; y++) {
+    for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.wide; x++) {
         if (this.cells[y][x] !== null) {
           cells[y][x] = Object.assign(this.cells[y][x]);
