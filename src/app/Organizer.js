@@ -9,26 +9,26 @@ module.exports = class Organizer {
   }
 
   play() {
-    var currentCells
-    var currentGameId
-    var nextGameId
-    this.initSync()
+    var currentCells;
+    var currentGameId;
+    var nextGameId;
+    this.initSync();
     while (!this.isFinished) {
-      currentGameId = this.turn % 2
-      this.games[currentGameId].play()
+      currentGameId = this.turn % 2;
+      this.games[currentGameId].play();
       nextGameId = (currentGameId + 1) % 2;
-      this.syncGames(currentGameId, nextGameId)
-      this.isFinished = this.games[nextGameId].checkWinner() 
-      this.turn += 1
+      this.syncGames(currentGameId, nextGameId);
+      this.isFinished = this.games[nextGameId].checkWinner();
+      this.turn += 1;
     }
   }
 
-  syncGames(currentGameId, nextGameId){
-    this.games[nextGameId].sync(this.games[currentGameId])
+  syncGames(currentGameId, nextGameId) {
+    this.games[nextGameId].sync(this.games[currentGameId]);
   }
 
-  initSync(){
-    this.games[0].initSync(this.games[1])
-    this.games[1].initSync(this.games[0])
+  initSync() {
+    this.games[0].initSync(this.games[1]);
+    this.games[1].initSync(this.games[0]);
   }
 };

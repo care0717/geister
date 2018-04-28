@@ -9,8 +9,8 @@ module.exports = class HumanPlayer extends Player {
   }
   initBoard(board){
     for (let y = 1; y < board.wide - 1; y++) {
-      board.cells[board.hight - 2][y] = new Piece("bad", this.id);
-      board.cells[board.hight - 1][y] = new Piece("good", this.id);
+      board.cells[board.height - 2][y] = new Piece("bad", this.id);
+      board.cells[board.height - 1][y] = new Piece("good", this.id);
     }
   }
   getMove(board) {
