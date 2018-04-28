@@ -2,12 +2,13 @@
   "name": "geister",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/main.js",
-    "test": "node_modules/.bin/prettier src/**/*.js test/**/*.js --write && node_modules/mocha/bin/mocha --recursive",
+    "start": "npm run prettier && node src/main.js",
+    "test": "node_modules/.bin/mocha --recursive",
     "prettier": "node_modules/.bin/prettier src/**/*.js test/**/*.js --write",
-    "web": "node_modules/.bin/webpack && node src/index.js"
+    "prettier-test": "node_modules/.bin/prettier src/**/*.js test/**/*.js --list-different",
+    "web": "npm run prettier && node_modules/.bin/webpack && node src/server.js"
   },
   "author": "",
   "license": "ISC",
