@@ -13,20 +13,23 @@ module.exports = class Player {
     return board.getPlayerPiecePositions(this.id).all;
   }
 
-  isWinnerByGetPiece(board){
-    return board.getPlayerPiecePositions(this.id).bad.length === 0 || board.getPlayerPiecePositions((this.id+1)%2).good.length === 0
+  isWinnerByGetPiece(board) {
+    return (
+      board.getPlayerPiecePositions(this.id).bad.length === 0 ||
+      board.getPlayerPiecePositions((this.id + 1) % 2).good.length === 0
+    );
   }
 
   //ピースを動かしたら勝てる位置に駒があるかどうか
-  isWinnerByMovePiece(board){
-    const goodPositions = board.getPlayerPiecePositions(this.id).good
-    return goodPositions.reduce(function (previous, pos) {
-      return pos.isHere(0, 0) || pos.isHere(0, board.wide-1) || previous
+  isWinnerByMovePiece(board) {
+    const goodPositions = board.getPlayerPiecePositions(this.id).good;
+    return goodPositions.reduce(function(previous, pos) {
+      return pos.isHere(0, 0) || pos.isHere(0, board.wide - 1) || previous;
     }, false);
   }
 
   //extends先で各々実装するべき
-  initBoard(board){
+  initBoard(board) {
     for (let y = 1; y < board.wide - 1; y++) {
       board.cells[board.height - 2][y] = new Piece("bad", this.id);
       board.cells[board.height - 1][y] = new Piece("good", this.id);

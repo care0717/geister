@@ -7,7 +7,7 @@ module.exports = class HumanPlayer extends Player {
   constructor(id) {
     super(id);
   }
-  initBoard(board){
+  initBoard(board) {
     for (let y = 1; y < board.wide - 1; y++) {
       board.cells[board.height - 2][y] = new Piece("bad", this.id);
       board.cells[board.height - 1][y] = new Piece("good", this.id);
@@ -29,6 +29,6 @@ module.exports = class HumanPlayer extends Player {
   getRandomDirectionVec(board, targetPos) {
     const directionVectors = board.getCanMoveVec(this.id, targetPos);
     const index = Math.floor(Math.random() * directionVectors.length);
-    return directionVectors[index] || new Position(0,-1);
+    return directionVectors[index] || new Position(0, -1);
   }
 };
