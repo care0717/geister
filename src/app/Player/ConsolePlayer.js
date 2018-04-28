@@ -5,8 +5,8 @@ const Piece = require("../Piece");
 const readlineSync = require("readline-sync");
 
 module.exports = class ConsolePlayer extends Player {
-  constructor(id, currentTurn) {
-    super(id, currentTurn);
+  constructor(id) {
+    super(id);
   }
   initBoard(board){
     for (let y = 1; y < board.wide - 1; y++) {

@@ -21,6 +21,7 @@ module.exports = class Organizer {
       this.isFinished = this.games[nextGameId].checkWinner();
       this.turn += 1;
     }
+    console.log(`勝者は${this.games[nextGameId].returnWinner()}`);
   }
 
   syncGames(currentGameId, nextGameId) {

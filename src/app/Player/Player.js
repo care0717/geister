@@ -1,19 +1,12 @@
 "use strict";
 const Piece = require("../Piece");
 module.exports = class Player {
-  constructor(id, currentTurn) {
+  constructor(id) {
     this.id = id;
     this.gotPiece = { bad: 0, good: 0 };
-    this.currentTurn = currentTurn
   }
   get(piece) {
     this.gotPiece[piece.getProperty()] += 1;
-  }
-  getCurrentTurn() {
-    return this.currentTurn;
-  }
-  setCurrentTurn(turn) {
-    this.currentTurn = turn;
   }
 
   getMyPiecePos(board) {

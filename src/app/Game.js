@@ -46,12 +46,26 @@ module.exports = class Game {
   checkWinner() {
     return this.isFinishByGetPiece() || this.isFinishByMovePiece();
   }
+  returnWinner() {
+    if (this.isFinishByMovePiece()) {
+      return `Player${this.player.id}`;
+    }
+    if (
+      this.board.getPlayerPiecePositions(this.player.id).bad.length === 0 ||
+      this.board.getPlayerPiecePositions((this.player.id + 1) % 2).good
+        .length === 0
+    ) {
+      return `Player${this.player.id}`;
+    } else {
+      return `Player${(this.player.id + 1) % 2}`;
+    }
+  }
 
   isFinishByGetPiece() {
-    const player0Win =
+    const player1Win =
       this.board.getPlayerPiecePositions(1).bad.length === 0 ||
       this.board.getPlayerPiecePositions(0).good.length === 0;
-    const player1Win =
+    const player0Win =
       this.board.getPlayerPiecePositions(0).bad.length === 0 ||
       this.board.getPlayerPiecePositions(1).good.length === 0;
     return player0Win || player1Win;

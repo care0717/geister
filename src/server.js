@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
 
     socket.on('init', (data) => {
       socket.broadcast.to(data.room).emit('initReceive', {
-          cells: data.cells
+          cells: data.cells,
       });
     });
     socket.on('sync', (data) => {

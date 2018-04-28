@@ -4,8 +4,8 @@ const Position = require("../Position");
 const Piece = require("../Piece");
 
 module.exports = class HumanPlayer extends Player {
-  constructor(id, currentTurn) {
-    super(id, currentTurn);
+  constructor(id) {
+    super(id);
   }
   initBoard(board){
     for (let y = 1; y < board.wide - 1; y++) {

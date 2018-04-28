@@ -9,6 +9,8 @@ const Position = require("./app/Position");
   let game;
   let height;
   let wide;
+  let isMyReady = false;
+  let isOpponentReady = false;
   class WebGame extends Game {
     constructor(player, roomId){
       super(player)
@@ -32,15 +34,15 @@ const Position = require("./app/Position");
 
     selectBoard(tile){
       console.log("select")
-      if($(`#${tile}`).hasClass("selectedCell")){
-        $(`#${tile}`).removeClass("selectedCell")
-        this.selectPos = null
-      } else{
-        $(`#${tile}`).addClass("selectedCell")
-        const row = parseInt(tile.split('_')[1][0]);
-        const col = parseInt(tile.split('_')[1][1]);
-        this.selectPos = new Position(row, col)
-      }
+      $(`#${tile}`).addClass("selectedCell")
+      const row = parseInt(tile.split('_')[1][0]);
+      const col = parseInt(tile.split('_')[1][1]);
+      this.selectPos = new Position(row, col)
+    }
+    unselectBoard(tile){
+      console.log("unselect")
+      $(`#${tile}`).removeClass("selectedCell")
+      this.selectPos = null
     }
 
     createGameBoard(message) {
@@ -52,19 +54,49 @@ const Position = require("./app/Position");
         const row = parseInt(this.id.split('_')[1][0]);
         const col = parseInt(this.id.split('_')[1][1]);
         const position = new Position(row, col)
-        if(game.isNotSelected()){
+        console.log(player)
+        if(!(isMyReady&&isOpponentReady)){
+          alert('Its not ready!');
+          return;
+        }
+        if(game.checkWinner()){
+          game.endGame(game.returnWinner())
+          socket.emit('gameEnded', {
+            room: game.getRoomId(),
+            winner: game.returnWinner()
+          });
+          return;
+        }
+        
+        if(!player.getCurrentTurn()){
+          alert('Its not your turn!');
+          return;
+        }
+        if(game.notExistSelectPos()){
           if(game.board.isMine(player.id, position)){
             game.selectBoard(this.id)
           }
         } else{
-          const move = {
-            currentPos: game.selectPos,
-            nextPos: position
+          if(game.isSelectPos(position)){
+            game.unselectBoard(this.id)
+            return;
           }
-          game.playerAction(move)
-          game.show()
-          game.toNotSelectState()
-          game.updateTiles()
+          if(!game.isArroundSelectPos(position)){
+            return;
+          }
+
+          if(game.board.canMove(player.id, position)){
+            const move = {
+              currentPos: game.selectPos,
+              nextPos: position
+            }
+            game.playerAction(move)
+            game.show()
+            game.toNotSelectState()
+            player.setCurrentTurn(false)
+            game.updateStatus()
+            game.updateTiles()
+          }
         }
       }
       const cells = game.board.cells
@@ -83,8 +115,17 @@ const Position = require("./app/Position");
         }
       }
     }
-    isNotSelected(){
+    isSelectPos(currntPos){
+      return this.selectPos.isHere(currntPos.vert, currntPos.hori)
+    }
+    isArroundSelectPos(currntPos){
+      return this.selectPos.minus(currntPos).size() === 1
+    }
+    notExistSelectPos(){
       return this.selectPos === null
+    }
+    updateStatus(){
+      $(`#status`).text(JSON.stringify(this.player.gotPiece))
     }
     updateTiles(){
       var cells = game.board.cells
@@ -95,11 +136,16 @@ const Position = require("./app/Position");
       }
       game.board.reverse()
       var cells = game.board.cells
+      $('#userHello').html("opponent turn");
       socket.emit('sync', {
         cells: cells,
         room: game.getRoomId(),
       });
       game.board.reverse()
+    }
+    endGame(winner){
+      $('.center').css('display', 'none');
+      $('#userHello').html(`勝者は${winner}`);
     }
   }
 
@@ -116,11 +162,11 @@ const Position = require("./app/Position");
   }
 
   // const socket = io.connect('http://tic-tac-toe-realtime.herokuapp.com'),
-  const socket = io.connect('http://localhost:5000');
+  const socket = io.connect('http://192.168.0.16:5000');
 
   // Create a new game. Emit newGame event.
   $('#new').on('click', () => {
-    player = new WebPlayer(0);
+    player = new WebPlayer(0, true);
     socket.emit('createGame', {});
   });
 
@@ -132,7 +178,7 @@ const Position = require("./app/Position");
       alert('Please enter game ID.');
       return;
     }
-    player = new WebPlayer(1);
+    player = new WebPlayer(1, false);
     socket.emit('joinGame', { name, room: roomID});
   });
 
@@ -145,6 +191,7 @@ const Position = require("./app/Position");
       cells: cells,
       room: game.getRoomId(),
     });
+    isMyReady = true
     game.board.reverse()
   });
 
@@ -192,6 +239,7 @@ const Position = require("./app/Position");
       }
     }
     game.board.setCells(data.cells, 2)
+    isOpponentReady = true
     $('#userHello').html("Opponent is ready");
   })
   
@@ -204,7 +252,8 @@ const Position = require("./app/Position");
     game.board.setCells(data.cells)
     console.log("sync")
     console.log(game.board.cells)
-    $('#userHello').html("Opponent is ready");
+    player.setCurrentTurn(true)
+    $('#userHello').html("your turn");
   })
 
 
@@ -219,7 +268,7 @@ const Position = require("./app/Position");
 
   // If the other player wins, this event is received. Notify user game has ended.
   socket.on('gameEnd', (data) => {
-    game.endGame(data.message);
+    game.endGame(data.winner);
     socket.leave(data.room);
   });
 

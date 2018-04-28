@@ -28,7 +28,7 @@ describe("Board", function() {
   describe("constractor", function() {
     it("wideとhightがきちんと入っている", function() {
       assert.equal(board.wide, WIDE);
-      assert.equal(board.hight, HIGHT);
+      assert.equal(board.height, HIGHT);
     });
   });
 
