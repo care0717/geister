@@ -161,7 +161,7 @@ const Position = require("./app/Position");
   }
 
   // const socket = io.connect('http://tic-tac-toe-realtime.herokuapp.com'),
-  const socket = io.connect("http://192.168.0.16:5000");
+  const socket = io.connect("https://geister-care.herokuapp.com:8080");
 
   // Create a new game. Emit newGame event.
   $("#new").on("click", () => {
