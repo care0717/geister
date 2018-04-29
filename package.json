@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "engines": {
+    "node": "8.9.0",
+    "npm": "6.0.0"
+  },
   "scripts": {
     "start": "npm run prettier && node src/main.js",
     "test": "node_modules/.bin/mocha --recursive",
