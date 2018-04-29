@@ -12,7 +12,8 @@
     "test": "node_modules/.bin/mocha --recursive",
     "prettier": "node_modules/.bin/prettier src/**/*.js test/**/*.js --write",
     "prettier-test": "node_modules/.bin/prettier src/**/*.js test/**/*.js --list-different",
-    "web": "npm run prettier && node_modules/.bin/webpack && node src/server.js"
+    "web": "npm run prettier && node_modules/.bin/webpack && node src/server.js",
+    "heroku-postbuild": "node_modules/.bin/webpack"
   },
   "author": "",
   "license": "ISC",
