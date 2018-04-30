@@ -2,6 +2,7 @@ const Game = require("./app/Game");
 const WebPlayer = require("./app/Player/WebPlayer");
 const CPUPlayer = require("./app/Player/CPUPlayer");
 const Position = require("./app/Position");
+const config = require('./environment/config');
 
 (function init() {
   let player;
@@ -161,7 +162,7 @@ const Position = require("./app/Position");
   }
 
   // const socket = io.connect('http://localhost:8080');
-  const socket = io.connect("https://geister-care.herokuapp.com");
+  const socket = io.connect(config.URL);
 
   // Create a new game. Emit newGame event.
   $("#new").on("click", () => {
