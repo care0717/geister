@@ -1,5 +1,5 @@
 "use strict";
-const Board = require("./Board");
+const Board = require("../Board");
 
 const HEIGT = 5;
 const WIDE = 5;

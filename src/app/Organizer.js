@@ -1,5 +1,5 @@
 "use strict";
-const Game = require("./Game");
+const Game = require("./Game/Game");
 
 module.exports = class Organizer {
   constructor(game0, game1) {
