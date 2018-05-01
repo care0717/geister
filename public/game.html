@@ -1,7 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 	<head>
-		<title>Geister</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="content-script-type" content="text/javascript">
+    <meta name="keywords" content="ガイスター,geister,ボードゲーム,web,boardgame">
+    <meta name="description" content="ガイスターをWEB上でできるようにしたもの">
+    <title>Geister</title>
 		<link rel="stylesheet" href="public/main.css">
     <link rel="stylesheet" href="node_modules/skeleton-css/css/skeleton.css">
 	</head>
@@ -9,10 +13,10 @@
 		<div class="container">
 			<div class="menu">
         <h1>Geister / ガイスター</h1>
-        <h3>What's this</h3>
+        <h2>What's this</h2>
         <p>A German 2 person board game using ghost-based piecs.<br>
         Geister(ガイスター)はおばけのコマを用いるドイツ製の二人用ボードゲームです．<br>これはガイスターをWEB上でできるようにしたものです．</p>
-        <h4>Victory Conditions</h4>
+        <h3>Victory Conditions</h3>
         <ol>
           <li>Take all the opponent's good ghost. / 相手の良いおばけをすべて取る</li>
           <li>Take everything against your bad ghost. / 自分の悪いおばけをすべてとらせる</li>
@@ -77,6 +81,11 @@
 		</div>
 		<script src="node_modules/jquery/dist/jquery.min.js"></script>
 		<script src="/socket.io/socket.io.js"></script>
-		<script src="public/bundle.js"></script>
-	</body>
+    <script src="public/bundle.js"></script>
+  </body>
+  <footer class="footer">
+    <div class="container">
+      <address>Copyright(C)2018 Asai, Allright Reserved. <a href="https://github.com/care0717/geister" target="_blank">ソースコード</a></address>
+    </div>
+  </footer>
 </html>
