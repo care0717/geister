@@ -1,5 +1,5 @@
 const config = {
-  URL: "https://geister-care.herokuapp.com/"
+  URL: "https://geister-web.herokuapp.com/"
 };
 
 module.exports = config;
