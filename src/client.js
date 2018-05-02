@@ -25,6 +25,26 @@ const config = require('./environment/config');
     }
   }
 
+  function initTileClickHandler() {
+    const row = parseInt(this.id.split("_")[1][0]);
+    const col = parseInt(this.id.split("_")[1][1]);
+    const position = new Position(row, col);
+    if (game.notExistSelectPos()) {
+      if (game.board.isMine(player.id, position)) {
+        game.selectBoard(this.id);
+      }
+    } else {
+      if (game.isSelectPos(position)) {
+        game.unselectBoard(this.id);
+        return;
+      }
+      console.log(game)
+      game.switchPiece(game.selectPos, position)
+      game.updateTiles(convertCellValue);
+      game.toNotSelectState();
+    }
+  }
+
   function tileClickHandler() {
     const row = parseInt(this.id.split("_")[1][0]);
     const col = parseInt(this.id.split("_")[1][1]);
@@ -69,7 +89,8 @@ const config = require('./environment/config');
         game.toNotSelectState();
         player.setCurrentTurn(false);
         game.updateStatus();
-        game.updateTiles(socket, convertCellValue);
+        game.updateTiles(convertCellValue);
+        game.nextTurn(socket)
       }
     }
   }
@@ -102,6 +123,8 @@ const config = require('./environment/config');
     });
     isMyReady = true;
     game.board.reverse();
+    game.toNotSelectState();
+    game.toReadyGameBoard(tileClickHandler);
   });
 
   // New Game created by current client. Update the UI and create new Game var.
@@ -114,7 +137,7 @@ const config = require('./environment/config');
     wide = game.board.wide;
     height = game.board.height;
 
-    game.createGameBoard(message, tileClickHandler);
+    game.createGameBoard(message, initTileClickHandler);
   });
 
   /**
@@ -137,7 +160,7 @@ const config = require('./environment/config');
     game = new WebGame(player, data.room);
     wide = game.board.wide;
     height = game.board.height;
-    game.createGameBoard(message, tileClickHandler);
+    game.createGameBoard(message, initTileClickHandler);
     $(".startButton").css("display", "block");
   });
 

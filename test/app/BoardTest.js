@@ -25,6 +25,19 @@ describe("Board", function() {
     p0PiecePos = new Position(0, 1);
     p1PiecePos = new Position(1, 1);
   });
+
+  afterEach(function(done) {
+    for (let y = 0; y < board.hight; y++) {
+      for (let x = 0; x < board.wide; x++) {
+        board.cells[y][x] = null;
+      }
+    }
+    board.cells[0][1] = p0Piece;
+    board.cells[1][1] = p1Piece;
+    board.cells[0][2] = p0Piece;
+    done();
+  });
+
   describe("constractor", function() {
     it("wideとhightがきちんと入っている", function() {
       assert.equal(board.wide, WIDE);
@@ -114,11 +127,18 @@ describe("Board", function() {
       board.move(p0PiecePos, nullPos);
       assert.equal(board.getCellValue(p0PiecePos), null);
       assert.equal(board.getCellValue(nullPos), p0Piece);
-      board.move(nullPos, p0PiecePos);
     });
     it("(0, 1)にあるコマを(1, 1)に動かせる", function() {
       board.move(p0PiecePos, p1PiecePos);
       assert.equal(board.getCellValue(p0PiecePos), null);
+      assert.equal(board.getCellValue(p1PiecePos), p0Piece);
+    });
+  });
+
+  describe("switchPiece", function() {
+    it("(0, 1)にあるコマと(1, 1)にあるコマを入れ替えられる", function() {
+      board.switchPiece(p0PiecePos, p1PiecePos);
+      assert.equal(board.getCellValue(p0PiecePos), p1Piece);
       assert.equal(board.getCellValue(p1PiecePos), p0Piece);
     });
   });

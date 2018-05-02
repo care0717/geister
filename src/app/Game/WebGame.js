@@ -43,14 +43,29 @@ module.exports = class WebGame extends Game {
     $(".startButton").css("display", "none");
     $("#userHello").html(message);
     const cells = this.board.cells;
-    for (let i = 0; i < this.board.height; i++) {
-      for (let j = 0; j < this.board.wide; j++) {
-        console.log("put info")
+    for (let i = this.board.height-2; i < this.board.height; i++) {
+      for (let j = 1; j < this.board.wide-1; j++) {
         $(`#button_${i}${j}`).on("click", tileClickHandler);
         $(`#button_${i}${j}`).text(cells[i][j] ? cells[i][j].getProperty() : null);
       }
     }
   }
+
+  toReadyGameBoard(tileClickHandler) {
+    const cells = this.board.cells;
+    for (let i = 0; i < this.board.height; i++) {
+      for (let j = 0; j < this.board.wide; j++) {
+        $(`#button_${i}${j}`).off('click');
+        $(`#button_${i}${j}`).on("click", tileClickHandler);
+      }
+    }
+  }
+
+  switchPiece(pos1, pos2){
+    this.board.switchPiece(pos1, pos2)
+    
+  }
+
   toNotSelectState() {
     for (let i = 0; i < this.board.height; i++) {
       for (let j = 0; j < this.board.wide; j++) {
@@ -71,13 +86,15 @@ module.exports = class WebGame extends Game {
   updateStatus() {
     $(`#status`).text(JSON.stringify(this.player.gotPiece));
   }
-  updateTiles(socket, convertCellValue) {
+  updateTiles(convertCellValue) {
     var cells = this.board.cells;
     for (let i = 0; i < this.board.height; i++) {
       for (let j = 0; j < this.board.wide; j++) {
         $(`#button_${i}${j}`).text(convertCellValue(cells[i][j]));
       }
     }
+  }
+  nextTurn(socket){
     this.board.reverse();
     var cells = this.board.cells;
     $("#userHello").html("opponent turn");
