@@ -23,4 +23,22 @@ describe("Position", function() {
       );
     });
   });
+  describe("minus", function() {
+    it("pos1とpos2を引ける", function() {
+      assert.equal(
+        JSON.stringify(pos1.minus(pos2)),
+        JSON.stringify(new Position(VERT - VERT, HORI - HORI - 1))
+      );
+    });
+  });
+  describe("size", function() {
+    it("pos1とpos2を引ける", function() {
+      assert.equal(pos1.size(), VERT + HORI);
+    });
+  });
+  describe("isHere", function() {
+    it("pos1の大きさは2", function() {
+      assert.equal(pos1.isHere(VERT, HORI), true);
+    });
+  });
 });
