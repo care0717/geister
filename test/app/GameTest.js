@@ -69,7 +69,7 @@ describe("Game", function() {
         bad: [piecePos2],
         good: [piecePos0]
       });
-      assert.equal(game.isFinishByMovePiece(), true);
+      assert.equal(game.isFinishByMovePiece(true), true);
     });
     it("(0,0)にp0のgoodコマがないのでtrueになる", function() {
       stubPiecePosFunc.withArgs(0).returns({
@@ -77,7 +77,15 @@ describe("Game", function() {
         bad: [piecePos2],
         good: [piecePos1]
       });
-      assert.equal(game.isFinishByMovePiece(), false);
+      assert.equal(game.isFinishByMovePiece(true), false);
+    });
+    it("自分のターンじゃなければfalseになる", function() {
+      stubPiecePosFunc.withArgs(0).returns({
+        all: [piecePos1, piecePos2],
+        bad: [piecePos2],
+        good: [piecePos1]
+      });
+      assert.equal(game.isFinishByMovePiece(false), false);
     });
   });
   describe("returnWinner", function() {

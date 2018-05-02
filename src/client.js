@@ -7,12 +7,14 @@ const config = require('./environment/config');
 (function init() {
   let player;
   let game;
+  let cpuGame;
+  let cpuPlayer;
   let height;
   let wide;
   let isMyReady = false;
   let isOpponentReady = false;
-  const socket = io.connect(config.URL);
 
+  const socket = io.connect(config.URL);
   function convertCellValue(cell) {
     if (cell !== null) {
       if (cell.owner === player.id) {
@@ -38,7 +40,6 @@ const config = require('./environment/config');
         game.unselectBoard(this.id);
         return;
       }
-      console.log(game)
       game.switchPiece(game.selectPos, position)
       game.updateTiles(convertCellValue);
       game.toNotSelectState();
@@ -53,7 +54,7 @@ const config = require('./environment/config');
       alert("Its not ready!");
       return;
     }
-    if (game.checkWinner()) {
+    if (game.checkWinner(true)) {
       game.endGame(game.returnWinner());
       socket.emit("gameEnded", {
         room: game.getRoomId(),
@@ -61,7 +62,6 @@ const config = require('./environment/config');
       });
       return;
     }
-
     if (!player.getCurrentTurn()) {
       alert("Its not your turn!");
       return;
@@ -84,13 +84,27 @@ const config = require('./environment/config');
           currentPos: game.selectPos,
           nextPos: position
         };
-        game.playerAction(move);
-        game.show();
-        game.toNotSelectState();
-        player.setCurrentTurn(false);
-        game.updateStatus();
-        game.updateTiles(convertCellValue);
-        game.nextTurn(socket)
+        if(game.isSingle){
+            game.playerAction(move);
+            game.show();
+            game.toNotSelectState();
+            game.updateStatus();
+            if (!game.checkWinner(false)) {
+              cpuGame.sync(game)
+              cpuGame.play()
+              game.sync(cpuGame)
+              game.updateTiles(convertCellValue);
+            }
+        } else {
+          game.playerAction(move);
+          game.show();
+          game.toNotSelectState();
+          player.setCurrentTurn(false);
+          game.updateStatus();
+          game.updateTiles(convertCellValue);
+          game.nextTurn(socket)
+        }
+        
       }
     }
   }
@@ -99,6 +113,11 @@ const config = require('./environment/config');
   $("#new").on("click", () => {
     player = new WebPlayer(0, true);
     socket.emit("createGame", {});
+  });
+
+  $("#cpumode").on("click", () => {
+    player = new WebPlayer(0, true);
+    socket.emit("createCPUGame", {});
   });
 
   // Join an existing game on the entered roomId. Emit the joinGame event.
@@ -119,7 +138,8 @@ const config = require('./environment/config');
     const cells = game.board.cells;
     socket.emit("init", {
       cells: cells,
-      room: game.getRoomId()
+      room: game.getRoomId(),
+      isSingle: false
     });
     isMyReady = true;
     game.board.reverse();
@@ -136,8 +156,31 @@ const config = require('./environment/config');
     game = new WebGame(player, data.room);
     wide = game.board.wide;
     height = game.board.height;
+    game.createGameTile(message, initTileClickHandler);
+  });
 
-    game.createGameBoard(message, initTileClickHandler);
+  socket.on("newCPUGame", data => {
+    const message = `Hello, Player0`;
+    game = new WebGame(player, data.room);
+    game.isSingle = true
+    wide = game.board.wide;
+    height = game.board.height;
+    game.createGameTile(message, initTileClickHandler);
+    $(".startButton").css("display", "block");
+  });
+
+  socket.on("cpuPlayer", data => {
+    cpuPlayer = new CPUPlayer(1)
+    cpuGame = new WebGame(cpuPlayer,data.room)
+    cpuGame.isSingle = true
+    cpuGame.board.reverse();
+    const cells = cpuGame.board.cells;
+    socket.emit("init", {
+      cells: cells,
+      room: game.getRoomId(),
+      isSingle: game.isSingle
+    });
+    cpuGame.board.reverse();
   });
 
   /**
@@ -160,7 +203,7 @@ const config = require('./environment/config');
     game = new WebGame(player, data.room);
     wide = game.board.wide;
     height = game.board.height;
-    game.createGameBoard(message, initTileClickHandler);
+    game.createGameTile(message, initTileClickHandler);
     $(".startButton").css("display", "block");
   });
 
@@ -171,6 +214,9 @@ const config = require('./environment/config');
           data.cells[i][j] ? data.cells[i][j].owner : null
         );
       }
+    }
+    if(cpuGame){
+      cpuGame.board.setCells(data.cells, 2);
     }
     game.board.setCells(data.cells, 2);
     isOpponentReady = true;
