@@ -48,6 +48,14 @@ module.exports = class Board {
   getCellValue(piecePos) {
     return this.cells[piecePos.vert][piecePos.hori];
   }
+  setCellValue(piecePos, value) {
+    this.cells[piecePos.vert][piecePos.hori] = Object.assign(value);
+  }
+  switchPiece(pos1, pos2) {
+    const temp = Object.assign(this.getCellValue(pos2));
+    this.setCellValue(pos2, this.getCellValue(pos1));
+    this.setCellValue(pos1, temp);
+  }
 
   isExist(piecePos) {
     let value = this.getCellValue(piecePos);
