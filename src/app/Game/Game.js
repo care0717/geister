@@ -43,11 +43,11 @@ module.exports = class Game {
     game.board.reverse();
   }
 
-  checkWinner() {
-    return this.isFinishByGetPiece() || this.isFinishByMovePiece();
+  checkWinner(isMyTurn) {
+    return this.isFinishByGetPiece() || this.isFinishByMovePiece(isMyTurn);
   }
   returnWinner() {
-    if (this.isFinishByMovePiece()) {
+    if (this.isFinishByMovePiece(true)) {
       return `Player${this.player.id}`;
     }
     if (
@@ -70,13 +70,13 @@ module.exports = class Game {
       this.board.getPlayerPiecePositions(1).good.length === 0;
     return player0Win || player1Win;
   }
-  isFinishByMovePiece() {
+  isFinishByMovePiece(isMyTurn) {
     const goodPositions = this.board.getPlayerPiecePositions(this.player.id)
       .good;
     const wide = this.board.wide - 1;
     return goodPositions.reduce(function(previous, pos) {
       return pos.isHere(0, 0) || pos.isHere(0, wide) || previous;
-    }, false);
+    }, false) && isMyTurn;
   }
 
   playerAction(move) {

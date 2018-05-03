@@ -2,7 +2,7 @@ const path = require('path');
 
 module.exports = {
   // モードの設定、v4系以降はmodeを指定しないと、webpack実行時に警告が出る
-  mode: 'production',
+  mode: process.env.NODE_ENV,
   // エントリーポイントの設定
   entry: './src/client.js',
   target: "node",

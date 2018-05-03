@@ -7,6 +7,7 @@ module.exports = class WebGame extends Game {
     super(player);
     this.roomId = roomId;
     this.selectPos = null;
+    this.isSingle = false
   }
   getRoomId() {
     return this.roomId;
@@ -37,7 +38,7 @@ module.exports = class WebGame extends Game {
     this.selectPos = null;
   }
 
-  createGameBoard(message, tileClickHandler) {
+  createGameTile(message, tileClickHandler) {
     $(".menu").css("display", "none");
     $(".gameBoard").css("display", "block");
     $(".startButton").css("display", "none");

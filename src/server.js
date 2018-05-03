@@ -6,22 +6,33 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 let rooms = 0;
+delete require.cache[require.resolve('socket.io')]
+delete require.cache[require.resolve('http')]
+delete require.cache[require.resolve('express')]
 
 app.use(express.static("."));
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => {  
   res.sendFile(path.join(__dirname, "../public/game.html"));
 });
 
 io.on("connection", socket => {
-  // Create a new game room and notify the creator of game.
   socket.on("createGame", data => {
     socket.join(`${++rooms}`);
     socket.emit("newGame", { name: "Player0", room: `${rooms}` });
   });
 
+  socket.on("createCPUGame", data => {
+    socket.join(`${++rooms}`);
+    socket.emit("newCPUGame", { name: "Player0", room: `${rooms}` });
+    socket.join(`${++rooms}`);
+    socket.emit("cpuPlayer", {room: `${rooms}` });
+  });
+
+  
+
   // Connect the Player 2 to the room he requested. Show error if room full.
-  socket.on("joinGame", function(data) {
+  socket.on("joinGame", data => {
     var room = io.nsps["/"].adapter.rooms[data.room];
     if (room && room.length === 1) {
       socket.join(data.room);
@@ -33,9 +44,15 @@ io.on("connection", socket => {
   });
 
   socket.on("init", data => {
-    socket.broadcast.to(data.room).emit("initReceive", {
-      cells: data.cells
-    });
+    if(data.isSingle){
+      socket.emit("initReceive", {
+        cells: data.cells
+      });
+    } else {
+      socket.broadcast.to(data.room).emit("initReceive", {
+        cells: data.cells
+      });
+    }
   });
   socket.on("sync", data => {
     socket.broadcast.to(data.room).emit("syncTile", {

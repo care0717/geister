@@ -18,7 +18,7 @@ module.exports = class Organizer {
       this.games[currentGameId].play();
       nextGameId = (currentGameId + 1) % 2;
       this.syncGames(currentGameId, nextGameId);
-      this.isFinished = this.games[nextGameId].checkWinner();
+      this.isFinished = this.games[nextGameId].checkWinner(true);
       this.turn += 1;
     }
     console.log(`勝者は${this.games[nextGameId].returnWinner()}`);

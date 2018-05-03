@@ -1,5 +1,5 @@
 const config = {
-  URL: "http://localhost/"
+  URL: "http://localhost:8080/"
 };
 
 module.exports = config;
