@@ -39,6 +39,13 @@ module.exports = class WebGame extends Game {
   }
 
   createGameTile(message, tileClickHandler) {
+    for (let i = 0; i < this.board.height; i++) {
+      $('table').append(`<tr id="tile_row${i}"></tr>`);
+      for (let j = 0; j < this.board.wide; j++) {
+        $(`#tile_row${i}`).append(`<td><button class="tile" id="button_${i}${j}"></button></td>`);
+      }
+    }
+    
     $(".menu").css("display", "none");
     $(".gameBoard").css("display", "block");
     $(".startButton").css("display", "none");

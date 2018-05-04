@@ -16,7 +16,7 @@ module.exports = class HumanPlayer extends Player {
   }
   
   initBoard(board) {
-    const randomProperties = this.getRandomProperties();
+    const randomProperties = this.getRandomProperties(board);
     for (let y = 0; y < 2; y++) {
       for (let x = 1; x < board.wide - 1; x++) {
         board.cells[board.height - y - 1][x] = new Piece(
@@ -27,8 +27,12 @@ module.exports = class HumanPlayer extends Player {
     }
   }
 
-  getRandomProperties() {
-    var array = ["good", "good", "good", "bad", "bad", "bad"];
+  getRandomProperties(board) {
+    var array = [];
+    for(let i = 0; i<board.wide-2; i++){
+      array.unshift("good")
+      array.push("bad")
+    }
     for (var i = array.length - 1; i > 0; i--) {
       var r = Math.floor(Math.random() * (i + 1));
       var tmp = array[i];

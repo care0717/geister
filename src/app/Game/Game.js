@@ -1,8 +1,8 @@
 "use strict";
 const Board = require("../Board");
 
-const HEIGT = 5;
-const WIDE = 5;
+const HEIGT = 6;
+const WIDE = 6;
 
 module.exports = class Game {
   constructor(player) {

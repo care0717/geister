@@ -1,6 +1,6 @@
 "use strict";
 
-const Game = require("./app/Game");
+const Game = require("./app/Game/Game");
 const ConsolePlayer = require("./app/Player/ConsolePlayer");
 const CPUPlayer = require("./app/Player/CPUPlayer");
 const Organizer = require("./app/Organizer");
