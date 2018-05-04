@@ -1,16 +1,16 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
   // モードの設定、v4系以降はmodeを指定しないと、webpack実行時に警告が出る
   mode: process.env.NODE_ENV,
   // エントリーポイントの設定
-  entry: './src/client.js',
+  entry: "./src/client.js",
   target: "node",
   // 出力の設定
   output: {
     // 出力するファイル名
-    filename: 'bundle.js',
+    filename: "bundle.js",
     // 出力先のパス（v2系以降は絶対パスを指定する必要がある）
-    path: path.join(__dirname, './public')
+    path: path.join(__dirname, "./public")
   }
 };

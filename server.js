@@ -6,14 +6,14 @@ const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
 let rooms = 0;
-delete require.cache[require.resolve('socket.io')]
-delete require.cache[require.resolve('http')]
-delete require.cache[require.resolve('express')]
+delete require.cache[require.resolve("socket.io")];
+delete require.cache[require.resolve("http")];
+delete require.cache[require.resolve("express")];
 
-app.use(express.static("."));
+app.use(express.static(__dirname + "/public"));
 
-app.get("/", (req, res) => {  
-  res.sendFile(path.join(__dirname, "../public/game.html"));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "/public/game.html"));
 });
 
 io.on("connection", socket => {
@@ -26,10 +26,8 @@ io.on("connection", socket => {
     socket.join(`${++rooms}`);
     socket.emit("newCPUGame", { name: "Player0", room: `${rooms}` });
     socket.join(`${++rooms}`);
-    socket.emit("cpuPlayer", {room: `${rooms}` });
+    socket.emit("cpuPlayer", { room: `${rooms}` });
   });
-
-  
 
   // Connect the Player 2 to the room he requested. Show error if room full.
   socket.on("joinGame", data => {
@@ -44,7 +42,7 @@ io.on("connection", socket => {
   });
 
   socket.on("init", data => {
-    if(data.isSingle){
+    if (data.isSingle) {
       socket.emit("initReceive", {
         cells: data.cells
       });
