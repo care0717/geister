@@ -24,6 +24,37 @@
   height: 25px;
   background-color: #f5f5f5;
 }
+
+.what{
+  cursor : pointer;
+}
+.what::after{
+  content: "▼";
+}
+.what.active::after{
+  content: "▲";
+}
+
+.victory-condition{
+  cursor : pointer;
+}
+.victory-condition::after{
+  content: "▼";
+}
+.victory-condition.active::after{
+  content: "▲";
+}
+
+.how-to{
+  cursor : pointer;
+}
+.how-to::after{
+  content: "▼";
+}
+.how-to.active::after{
+  content: "▲";
+}
+
 .container .text-muted {
   margin: 20px 0;
 }
