@@ -6,13 +6,6 @@ const Piece = require("../Piece");
 module.exports = class HumanPlayer extends Player {
   constructor(id) {
     super(id);
-    this.currentTurn = false;
-  }
-  getCurrentTurn() {
-    return this.currentTurn;
-  }
-  setCurrentTurn(turn) {
-    this.currentTurn = turn;
   }
   
   initBoard(board) {
