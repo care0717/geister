@@ -7,7 +7,7 @@ const Organizer = require("./app/Organizer");
 
 main();
 function main() {
-  const player0 = new CPUPlayer(0, true);
+  const player0 = new ConsolePlayer(0, true);
   const player1 = new CPUPlayer(1, false);
   const player0game = new Game(player0);
   const player1Game = new Game(player1);
