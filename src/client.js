@@ -54,16 +54,16 @@ const config = require('./environment/config');
       alert("Its not ready!");
       return;
     }
+    if (!player.getCurrentTurn()) {
+      alert("Its not your turn!");
+      return;
+    }
     if (game.checkWinner(true)) {
       game.endGame(game.returnWinner());
       socket.emit("gameEnded", {
         room: game.getRoomId(),
         winner: game.returnWinner()
       });
-      return;
-    }
-    if (!player.getCurrentTurn()) {
-      alert("Its not your turn!");
       return;
     }
     if (game.notExistSelectPos()) {
@@ -104,7 +104,7 @@ const config = require('./environment/config');
           game.updateTiles(convertCellValue);
           game.nextTurn(socket)
         }
-        
+
       }
     }
   }
@@ -151,7 +151,7 @@ const config = require('./environment/config');
   socket.on("newGame", data => {
     const message = `Hello, ${
       data.name
-    }. Please ask your friend to enter Game ID: 
+    }. Please ask your friend to enter Game ID:
       ${data.room}. Waiting for player 1...`;
     game = new WebGame(player, data.room);
     wide = game.board.wide;
